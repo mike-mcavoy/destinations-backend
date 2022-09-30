@@ -13,5 +13,10 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint"]
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        "no-trailing-spaces": "warn",
+        "arrow-parens": ["error", "always"],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
+    }
 }
