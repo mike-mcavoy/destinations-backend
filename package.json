@@ -1,0 +1,19 @@
+{
+  "name": "destinations-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mike-mcavoy/destinations-backend.git",
+  "author": "Mike McAvoy <mcavoy.m@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.7.23",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "start": "node ./build/app.js"
+  }
+}
