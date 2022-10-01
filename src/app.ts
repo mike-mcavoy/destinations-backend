@@ -5,6 +5,8 @@ import { getRoutes } from './routes'
 function startServer(port: number): Promise<Server> {
     const app = express()
 
+    app.use(express.json())
+
     app.use('/api', getRoutes())
 
     return new Promise((resolve) => {
