@@ -9,7 +9,7 @@ function getHealthCheckRoutes() {
 }
 
 function healthCheck(req: Request, res: Response) {
-    res.status(200).send('Alive and Kickin')
+    res.status(200).send('Hello World 🌎')
 }
 
 export { getHealthCheckRoutes }

@@ -6,6 +6,8 @@
     "author": "Mike McAvoy",
     "license": "MIT",
     "dependencies": {
+        "@aws-sdk/client-cognito-identity-provider": "^3.181.0",
+        "crypto": "^1.0.1",
         "express": "^4.18.1",
         "zod": "^3.19.1"
     },
