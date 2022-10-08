@@ -6,10 +6,9 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import z from 'zod'
 
-const REGION = ''
-const CLIENT_ID = ''
-const CLIENT_SECRET = ''
-const USER_POOL_ID = ''
+const REGION = process.env.COGNITO_REGION as string
+const CLIENT_ID = process.env.COGNITO_CLIENT_ID as string
+const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET as string
 
 const cognitoIdentity = new CognitoIdentityProvider({
     region: REGION,
@@ -46,7 +45,7 @@ async function signUp(req: Request, res: Response) {
         const userSignUpDTO: UserSignUpDTO = req.body
         userSignUpSchema.parse(userSignUpDTO)
 
-        const userData = await cognitoIdentity.signUp({
+        const data = await cognitoIdentity.signUp({
             ClientId: CLIENT_ID,
             SecretHash: generateHash(userSignUpDTO.email),
             Username: userSignUpDTO.email,
@@ -57,13 +56,6 @@ async function signUp(req: Request, res: Response) {
                 { Name: 'family_name', Value: userSignUpDTO.surname },
             ],
         })
-
-        const confirmedUserData = await cognitoIdentity.adminConfirmSignUp({
-            UserPoolId: USER_POOL_ID,
-            Username: userSignUpDTO.email,
-        })
-
-        console.log(confirmedUserData)
 
         res.status(200).send(true)
     } catch (err) {
