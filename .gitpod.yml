@@ -3,7 +3,11 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: yarn install
-    command: yarn run start
-
-
+    - name: Prisma
+      command: |
+          docker-compose up -d
+          npx prisma migrate dev
+          npx prisma studio
+    - name: Express Server
+      init: yarn install
+      command: yarn run start
