@@ -5,6 +5,7 @@ import {
     CognitoIdentityProvider,
 } from '@aws-sdk/client-cognito-identity-provider'
 import z from 'zod'
+import { DB } from '../db'
 
 const REGION = process.env.COGNITO_REGION as string
 const CLIENT_ID = process.env.COGNITO_CLIENT_ID as string
@@ -57,6 +58,19 @@ async function signUp(req: Request, res: Response) {
             ],
         })
 
+        if (!data.UserSub) {
+            res.status(500).send(false)
+        }
+
+        const dbUser = await DB.user.create({
+            data: {
+                id: data.UserSub!,
+                firstName: userSignUpDTO.firstName,
+                surname: userSignUpDTO.surname,
+                email: userSignUpDTO.email,
+            },
+        })
+
         res.status(200).send(true)
     } catch (err) {
         res.send(err)
@@ -77,8 +91,6 @@ async function signIn(req: Request, res: Response) {
                 SECRET_HASH: generateHash(userSignInDTO.email),
             },
         })
-
-        console.log(data)
 
         res.status(200).send(true)
     } catch (err) {

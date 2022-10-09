@@ -17,6 +17,7 @@
     "rules": {
         "no-trailing-spaces": "warn",
         "arrow-parens": ["error", "always"],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "@typescript-eslint/no-non-null-assertion": "off"
     }
 }
