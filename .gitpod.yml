@@ -7,6 +7,7 @@ tasks:
       command: |
           docker-compose up -d
           npx prisma migrate dev
+          npx prisma db seed
           npx prisma studio
     - name: Express Server
       init: yarn install
