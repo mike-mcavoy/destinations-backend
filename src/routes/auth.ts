@@ -92,7 +92,7 @@ async function signIn(req: Request, res: Response) {
             },
         })
 
-        res.status(200).send(true)
+        res.status(200).send(data.AuthenticationResult?.AccessToken)
     } catch (err) {
         res.send(err)
     }

@@ -2,7 +2,7 @@ import express from 'express'
 import { Server } from 'net'
 import { getRoutes } from './routes'
 
-function startServer(port: number): Promise<Server> {
+async function startServer(port: number): Promise<Server> {
     const app = express()
 
     app.use(express.json())
