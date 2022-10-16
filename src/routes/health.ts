@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express'
-import { authMiddleware } from '../middleware/auth'
 
 function getHealthCheckRoutes() {
     const router = express.Router()
 
-    router.get('/', authMiddleware, healthCheck)
+    router.get('/', healthCheck)
 
     return router
 }

@@ -14,23 +14,26 @@ async function generatePems() {
         if (res.status !== 200) {
             throw 'There was an error with the request'
         }
+
         const { keys } = res.data as { keys: { [key: string]: any } }
 
         for (const [_, key] of Object.entries(keys)) {
-            const keyId = key.kid
-            const modulus = key.n
-            const exponent = key.e
-            const keyType = key.kty
+            const jwk = {
+                alg: key.alg,
+                e: key.e,
+                kid: key.kid,
+                kty: key.kty,
+                n: key.n,
+                use: key.use,
+            }
 
-            const jwk = { kty: keyType, n: modulus, e: exponent }
             const pem = jwtToPem(jwk)
 
-            pems[keyId] = pem
+            pems[key.kid] = pem
         }
 
         Object.freeze(pems)
     } catch (err) {
-        console.log(err)
         console.log('Could not fetch jwks')
     }
 }
