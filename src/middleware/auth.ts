@@ -10,7 +10,7 @@ const MAX_TOKEN_AGE = 60 * 60 // 3600 seconds
 
 function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = req.header('Auth')
-
+ 
     if (!token) {
         res.status(401).end()
     } else {
