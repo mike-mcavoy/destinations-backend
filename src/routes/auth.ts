@@ -32,6 +32,12 @@ const userSignInSchema = z.object({
 
 type UserSignInDTO = z.infer<typeof userSignInSchema>
 
+const refreshTokenSchema = z.object({
+    refreshToken: z.string(),
+})
+
+type RefreshTokenDTO = z.infer<typeof refreshTokenSchema>
+
 function getAuthRoutes() {
     const router = express.Router()
 
@@ -95,6 +101,22 @@ async function signIn(req: Request, res: Response) {
         res.status(200).send(data.AuthenticationResult?.AccessToken)
     } catch (err) {
         res.send(err)
+    }
+}
+
+async function refreshToken(req: Request, res: Response) {
+    const user = req.context.user?.id
+    const refreshToken = true
+
+    if (user && refreshToken) {
+        const data = await cognitoIdentity.initiateAuth({
+            AuthFlow: AuthFlowType.REFRESH_TOKEN_AUTH,
+            ClientId: CLIENT_ID,
+            AuthParameters: {
+                REFRESH_TOKEN: '',
+                SECRET_HASH: generateHash(user),
+            },
+        })
     }
 }
 
