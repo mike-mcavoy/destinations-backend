@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import crypto from 'crypto'
 import {
     AuthFlowType,
@@ -6,6 +6,8 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import z from 'zod'
 import { DB } from '../db'
+import { InternalServerError } from '../utils/error'
+import { ApiResponse } from '../utils/response'
 
 const REGION = process.env.COGNITO_REGION as string
 const CLIENT_ID = process.env.COGNITO_CLIENT_ID as string
@@ -34,6 +36,7 @@ type UserSignInDTO = z.infer<typeof userSignInSchema>
 
 const refreshTokenSchema = z.object({
     refreshToken: z.string(),
+    userId: z.string(),
 })
 
 type RefreshTokenDTO = z.infer<typeof refreshTokenSchema>
@@ -43,11 +46,12 @@ function getAuthRoutes() {
 
     router.post('/signup', signUp)
     router.post('/signin', signIn)
+    router.post('/refresh', refreshToken)
 
     return router
 }
 
-async function signUp(req: Request, res: Response) {
+async function signUp(req: Request, res: Response, next: NextFunction) {
     try {
         const userSignUpDTO: UserSignUpDTO = req.body
         userSignUpSchema.parse(userSignUpDTO)
@@ -65,7 +69,9 @@ async function signUp(req: Request, res: Response) {
         })
 
         if (!data.UserSub) {
-            res.status(500).send(false)
+            throw new InternalServerError(
+                'Something went wrong creating a new account'
+            )
         }
 
         const dbUser = await DB.user.create({
@@ -77,13 +83,20 @@ async function signUp(req: Request, res: Response) {
             },
         })
 
-        res.status(200).send(true)
+        // res.locals.response = new ApiResponse({
+        //     id: dbUser.id,
+        //     email: dbUser.email,
+        // })
+
+        res.locals.response
+
+        next()
     } catch (err) {
-        res.send(err)
+        next(err)
     }
 }
 
-async function signIn(req: Request, res: Response) {
+async function signIn(req: Request, res: Response, next: NextFunction) {
     try {
         const userSignInDTO: UserSignInDTO = req.body
         userSignInSchema.parse(userSignInDTO)
@@ -98,25 +111,38 @@ async function signIn(req: Request, res: Response) {
             },
         })
 
-        res.status(200).send(data.AuthenticationResult?.AccessToken)
+        res.locals.response = new ApiResponse({
+            accessToken: data.AuthenticationResult?.AccessToken,
+        })
+
+        next()
     } catch (err) {
-        res.send(err)
+        next(err)
     }
 }
 
-async function refreshToken(req: Request, res: Response) {
-    const user = req.context.user?.id
-    const refreshToken = true
+async function refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+        const refreshTokenDto: RefreshTokenDTO = req.body
+        refreshTokenSchema.parse(refreshTokenDto)
 
-    if (user && refreshToken) {
+        const { userId, refreshToken } = refreshTokenDto
         const data = await cognitoIdentity.initiateAuth({
             AuthFlow: AuthFlowType.REFRESH_TOKEN_AUTH,
             ClientId: CLIENT_ID,
             AuthParameters: {
-                REFRESH_TOKEN: '',
-                SECRET_HASH: generateHash(user),
+                REFRESH_TOKEN: refreshToken,
+                SECRET_HASH: generateHash(userId),
             },
         })
+
+        res.locals.response = new ApiResponse({
+            accessToken: data.AuthenticationResult?.AccessToken,
+        })
+
+        next()
+    } catch (err) {
+        next(err)
     }
 }
 

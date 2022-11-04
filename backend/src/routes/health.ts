@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
+import { ApiResponse } from '../utils/response'
 
 function getHealthCheckRoutes() {
     const router = express.Router()
@@ -8,8 +9,9 @@ function getHealthCheckRoutes() {
     return router
 }
 
-function healthCheck(req: Request, res: Response) {
-    res.status(200).send('Hello World 🌎')
+function healthCheck(req: Request, res: Response, next: NextFunction) {
+    res.locals.response = new ApiResponse('Hello World 🌎')
+    next()
 }
 
 export { getHealthCheckRoutes }

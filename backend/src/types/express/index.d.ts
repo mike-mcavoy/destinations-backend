@@ -1,3 +1,5 @@
+import { ResponseObject } from '../../utils/response'
+
 declare namespace Express {
     interface Context {
         user?: {
@@ -5,7 +7,10 @@ declare namespace Express {
         }
     }
 
-    export interface Request {
-        context: Context
+    export interface Response {
+        locals: {
+            context: Context
+            response: ResponseObject
+        }
     }
 }

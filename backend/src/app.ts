@@ -1,6 +1,9 @@
 import express from 'express'
 import { Server } from 'net'
 import { contextMiddleware } from './middleware/context'
+import { errorMiddleware } from './middleware/error'
+import { notFoundMiddleware } from './middleware/notFound'
+import { responseMiddleware } from './middleware/response'
 import { getRoutes } from './routes'
 
 async function startServer(port: number): Promise<Server> {
@@ -11,6 +14,12 @@ async function startServer(port: number): Promise<Server> {
     app.use(contextMiddleware)
 
     app.use('/api', getRoutes())
+
+    app.use(responseMiddleware)
+
+    app.use(notFoundMiddleware)
+
+    app.use(errorMiddleware)
 
     return new Promise((resolve) => {
         const server = app.listen(port, () => {

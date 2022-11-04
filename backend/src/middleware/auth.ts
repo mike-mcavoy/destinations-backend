@@ -10,7 +10,7 @@ const MAX_TOKEN_AGE = 60 * 60 // 3600 seconds
 
 function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const token = req.header('Auth')
- 
+
     if (!token) {
         res.status(401).end()
     } else {
@@ -37,7 +37,7 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
                         const payload = result as JwtPayload
 
                         if (payload.sub) {
-                            req.context.user = {
+                            res.locals.context.user = {
                                 id: payload.sub,
                             }
                         }
