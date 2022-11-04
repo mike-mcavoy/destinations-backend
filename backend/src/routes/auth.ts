@@ -99,6 +99,7 @@ async function signIn(req: Request, res: Response, next: NextFunction) {
         const userSignInDTO: UserSignInDTO = req.body
         userSignInSchema.parse(userSignInDTO)
 
+        //TODO: catch cognito errors correctly
         const data = await cognitoIdentity.initiateAuth({
             AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
             ClientId: CLIENT_ID,
