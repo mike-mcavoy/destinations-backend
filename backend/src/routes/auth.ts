@@ -83,12 +83,10 @@ async function signUp(req: Request, res: Response, next: NextFunction) {
             },
         })
 
-        // res.locals.response = new ApiResponse({
-        //     id: dbUser.id,
-        //     email: dbUser.email,
-        // })
-
-        res.locals.response
+        res.locals.response = new ApiResponse({
+            id: dbUser.id,
+            email: dbUser.email,
+        })
 
         next()
     } catch (err) {
