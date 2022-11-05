@@ -12,6 +12,7 @@ const errorMiddleware = (
         return res.status(err.getStatusCode()).json(err.getResponseObject())
     }
 
+    //TODO: Need a better way of handling Zod errors
     if (err instanceof ZodError) {
         return res.status(400).json({
             status: 400,

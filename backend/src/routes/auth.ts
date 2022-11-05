@@ -83,6 +83,7 @@ async function signUp(req: Request, res: Response, next: NextFunction) {
             },
         })
 
+        //TODO: Improve typing of res.locals
         res.locals.response = new ApiResponse({
             id: dbUser.id,
             email: dbUser.email,
@@ -112,6 +113,7 @@ async function signIn(req: Request, res: Response, next: NextFunction) {
 
         res.locals.response = new ApiResponse({
             accessToken: data.AuthenticationResult?.AccessToken,
+            refreshToken: data.AuthenticationResult?.RefreshToken,
         })
 
         next()
@@ -126,6 +128,7 @@ async function refreshToken(req: Request, res: Response, next: NextFunction) {
         refreshTokenSchema.parse(refreshTokenDto)
 
         const { userId, refreshToken } = refreshTokenDto
+
         const data = await cognitoIdentity.initiateAuth({
             AuthFlow: AuthFlowType.REFRESH_TOKEN_AUTH,
             ClientId: CLIENT_ID,
