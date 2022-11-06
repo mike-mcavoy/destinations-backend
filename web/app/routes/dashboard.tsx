@@ -2,12 +2,12 @@ import { LoaderFunction, redirect } from '@remix-run/node'
 import { accessTokenCookie } from '~/cookies'
 
 export const loader: LoaderFunction = async ({ request }) => {
-    const cookieHeader = request.headers.get('Cookie')
-    const cookie = await accessTokenCookie.parse(cookieHeader)
+    // const cookieHeader = request.headers.get('Cookie')
+    // const cookie = await accessTokenCookie.parse(cookieHeader)
 
-    if (!cookie) {
-        return redirect('/login')
-    }
+    // if (!cookie) {
+    //     return redirect('/login')
+    // }
 
     return true
 }
