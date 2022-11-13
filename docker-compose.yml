@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-    database:
+    postgres:
         image: 'postgres:latest'
-        container_name: database
-        hostname: database
+        container_name: postgres
+        hostname: postgres
         ports:
             - 5432:5432
         environment:
@@ -26,11 +26,11 @@ services:
             - ./backend/:/user/app
         container_name: backend-api
         expose:
-            - '3001'
-            - '5555'
+            - 3001
+            - 5555
         ports:
-            - '3001:3001'
-            - '5555:5555'
+            - 3001:3001
+            - 5555:5555
         command: npm run start
         depends_on:
-            - database
+            - postgres
