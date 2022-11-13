@@ -7,8 +7,10 @@
         "ghcr.io/devcontainers/features/git:1": {},
         "ghcr.io/devcontainers/features/node:1": {}
     },
-    "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
-    "postStartCommand": "make dev-up"
+    "postCreateCommand": {
+        "yarn": "bash ./.devcontainer/postCreateCommand.sh",
+        "build-images": "make dev-build"
+    },
 
     // Features to add to the dev container. More info: https://containers.dev/implementors/features.
     // "features": {},
