@@ -1,0 +1,16 @@
+FROM node:16
+
+ARG DATABASE_URL
+
+ENV DATABASE_URL $DATABASE_URL
+
+WORKDIR /usr/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npx prisma migrate dev
+RUN npx prisma db seed
