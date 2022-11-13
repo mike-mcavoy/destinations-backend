@@ -24,7 +24,10 @@ services:
             - 5555:5555
         depends_on:
             - postgres
-        command: npm run start
+        command: >
+            bash -c "npx prisma migrate dev
+            && npx prisma db seed
+            && yarn start"
     postgres:
         image: 'postgres:latest'
         container_name: postgres
