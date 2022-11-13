@@ -1,17 +1,9 @@
 version: '3'
 
 services:
-    postgres:
-        image: 'postgres:latest'
-        container_name: postgres
-        hostname: postgres
-        ports:
-            - 5432:5432
-        environment:
-            - POSTGRES_USER=$POSTGRES_USER
-            - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-            - POSTGRES_DB=$POSTGRES_DB
     backend:
+        container_name: backend
+        hostname: backend
         environment:
             - COGNITO_REGION=$COGNITO_REGION
             - COGNITO_POOL_ID=$COGNITO_POOL_ID
@@ -24,13 +16,26 @@ services:
                 - DATABASE_URL=${DATABASE_URL}
         volumes:
             - ./backend/:/user/app
-        container_name: backend-api
         expose:
             - 3001
             - 5555
         ports:
             - 3001:3001
             - 5555:5555
-        command: npm run start
         depends_on:
             - postgres
+        command: npm run start
+    postgres:
+        image: 'postgres:latest'
+        container_name: postgres
+        hostname: postgres
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=$POSTGRES_USER
+            - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+            - POSTGRES_DB=$POSTGRES_DB
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+volumes:
+    pgdata:
