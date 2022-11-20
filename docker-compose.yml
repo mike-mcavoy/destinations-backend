@@ -15,7 +15,7 @@ services:
             args:
                 - DATABASE_URL=${DATABASE_URL}
         volumes:
-            - ./backend/:/user/app
+            - ./backend/:/usr/app
         expose:
             - 3001
             - 5555
